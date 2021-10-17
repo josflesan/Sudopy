@@ -3,7 +3,7 @@
 from typing import List, Tuple
 
 
-def solve_backtrack(b):
+def solve_backtrack(b: List[int]) -> bool:
     '''
     Function that solves a partially complete sudoku board using backtracking.
     The algorithm recursively finds an empty cell, and for each possible
@@ -34,7 +34,7 @@ def solve_backtrack(b):
     return False
 
 
-def check_valid(b, num, pos):
+def check_valid(b: List[int], num: int, pos: int) -> bool:
     '''
     Function that checks whether or not a particular move is valid.
 
