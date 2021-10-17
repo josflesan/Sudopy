@@ -42,7 +42,6 @@ class GUI:
         # Draw grid and board
         board.draw(window)
 
-
     def format_time(self, secs: int) -> str:
         """
         Helper function that formats the time received by time module
@@ -115,7 +114,7 @@ class GUI:
                             
                             # Logic to handle end of the game
                             if board.is_finished():
-                                print("Game over")
+                                print("Game Over")
                                 run = False
                 
                 # Mouse Click Event Logic
@@ -129,6 +128,11 @@ class GUI:
             # If the cell is selected and no key has been pressed, add a note
             if board.selected and key != None:
                 board.add_note(key)
+
+            # If the user has made 3 mistakes, end the game
+            if strikes == 3:
+                print("Game Over")
+                run = False
 
             # Redraw the window in each frame and update the pygame display
             self.redraw_window(window, board, play_time, strikes)
