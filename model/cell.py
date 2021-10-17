@@ -32,7 +32,7 @@ class Cell:
 
     ROWS, COLS = 9, 9
 
-    def __init__(self, num, row, col, boardWidth, boardHeight):
+    def __init__(self, num: int, row: int, col: int, boardWidth: int, boardHeight: int) -> None:
         """
         Constructs necessary attributes for Cell object
 
@@ -54,33 +54,33 @@ class Cell:
     # GETTERS
 
     @property
-    def num(self):
+    def num(self) -> int:
         return self._num
 
     @property
-    def tempNum(self):
+    def tempNum(self) -> int:
         return self._tempNum
 
     @property
-    def selected(self):
+    def selected(self) -> bool:
         return self._selected
 
     # SETTERS
 
     @num.setter
-    def num(self, val):
+    def num(self, val: int) -> None:
         self._num = val
 
     @tempNum.setter
-    def tempNum(self, val):
+    def tempNum(self, val: int) -> None:
         self._tempNum = val
 
     @selected.setter
-    def selected(self, val):
+    def selected(self, val: int) -> None:
         self._selected = val
 
 
-    def draw(self, window):
+    def draw(self, window: pygame.display) -> None:
         """
         Function that draws the cell onto the screen, as well as its number
 
