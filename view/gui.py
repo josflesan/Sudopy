@@ -44,7 +44,6 @@ class GUI:
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                print("TEST")
                 GUI.RUN = False
                 return True  # Exit this loop (solution is to end program)
         
