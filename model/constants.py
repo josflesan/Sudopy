@@ -21,13 +21,18 @@ class Constants:
         the y dimension of the window
     FONT_SIZE : int
         the font size used by the app
+    BTN_FONT_SIZE : int
+        the font size used for button text
+    Y_OFFSET : int
+        the amount (in px) the board is displaced down
     """
 
     APP_TITLE = "SudoPy"
     FONT = "ubuntumono"
 
-    WIN_DIMENS = (540, 800)
+    WIN_DIMENS = (540, 770)
     WIN_WIDTH = WIN_DIMENS[0]
     WIN_HEIGHT = WIN_DIMENS[1]
     FONT_SIZE = 30
-    Y_OFFSET = 170  # The y position at which the board is drawn
+    BTN_FONT_SIZE = 20
+    Y_OFFSET = 150  # The y position at which the board is drawn
