@@ -77,9 +77,9 @@ class Board:
         self._height = height
         self._selected = None
 
-        self.cells = [[Cell(self.BOARD[i][j], i, j, width, height) for j in range(cols)] 
-                        for i in range(rows)]
         self.model = self.BOARD
+        self.cells = [[Cell(self.model[i][j], i, j, width, height) for j in range(cols)] 
+                        for i in range(rows)]
 
     # GETTERS
 
@@ -113,8 +113,12 @@ class Board:
 
     def update_board(self) -> None:
         """Function that updates the 2D array model for the sudoku board"""
+        self.cells = [[Cell(self.model[i][j], i, j, self._width, self._height) for j in range(self._cols)] 
+                for i in range(self._rows)]
+
         self.model = [[self.cells[i][j].num for j in range(self.cols)]
-                        for i in range(self.rows)]
+                for i in range(self.rows)]
+
 
     def insert_num(self, val: int) -> bool:
         """
