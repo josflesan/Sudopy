@@ -31,8 +31,9 @@ The SudoPy app comes with the following features:
 
 
 ## Screenshots
-<!-- ![Example screenshot](./img/screenshot.png) -->
-<!-- If you have screenshots you'd like to share, include them here. -->
+![App Start Screenshot](./img/screenshot_1.png)
+![Auto Solve Screenshot](./img/screenshot_2.png)
+![Normal Solve Screenshot](./img/screenshot_3.png)
 
 
 ## Setup
@@ -62,7 +63,7 @@ To do:
 
 
 ## Acknowledgements
-- This project was based on [this tutorial](https://www.techwithtim.net/tutorials/python-programming/sudoku-solver-backtracking/).
+- Core sudoku project and backtracking logic was based on [this tutorial](https://www.techwithtim.net/tutorials/python-programming/sudoku-solver-backtracking/).
 
 
 ## Contact
