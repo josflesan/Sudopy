@@ -218,7 +218,7 @@ class Board:
             Returns:
                     (tuple[int]): The x and y position of the start of the cell that was clicked
         """
-        if pos[0] < self.width and pos[1] - Constants.Y_OFFSET < self.height:
+        if pos[0] < self.width and pos[1] < self.height and pos[1] > Constants.Y_OFFSET:
             gap = self.width / 9
             x = pos[0] // gap
             y = (pos[1] - Constants.Y_OFFSET) // gap
