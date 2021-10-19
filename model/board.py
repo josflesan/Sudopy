@@ -1,7 +1,8 @@
 from controller.solver import check_valid, solve_backtrack
 from model.cell import Cell
 from model.colors import Colors
-from typing import Tuple
+from typing import List, Tuple
+from copy import deepcopy
 import pygame
 
 class Board:
@@ -68,7 +69,6 @@ class Board:
                     width (int): The width of the sudoku board
                     height (int): The height of the sudoku board
         """
-        self.__model = None
         self._rows = rows
         self._cols = cols
         self._width = width
@@ -77,6 +77,7 @@ class Board:
 
         self.cells = [[Cell(self.BOARD[i][j], i, j, width, height) for j in range(cols)] 
                         for i in range(rows)]
+        self.model = self.BOARD
 
     # GETTERS
 
@@ -110,7 +111,7 @@ class Board:
 
     def update_board(self) -> None:
         """Function that updates the 2D array model for the sudoku board"""
-        self.__model = [[self.cells[i][j].num for j in range(self.cols)]
+        self.model = [[self.cells[i][j].num for j in range(self.cols)]
                         for i in range(self.rows)]
 
     def insert_num(self, val: int) -> bool:
@@ -130,8 +131,12 @@ class Board:
             self.cells[row][col].num = val
             self.update_board()
 
+            old_model = deepcopy(self.model)  # Save current state of the model
+
             # If the move is valid (check using the backtracking algorithm), move is ok
-            if check_valid(self.__model, val, (row, col)) and solve_backtrack(self.__model):
+            if check_valid(self.model, val, (row, col)) and solve_backtrack(self.model):
+                # Clear the model, then return (so visualization still works)
+                self.model = old_model
                 return True
             # If the move is not valid, bring cell back to default and update the model again
             else:

@@ -50,6 +50,9 @@ class Cell:
         self._num = num
         self._tempNum = 0
         self._selected = False
+        # Used for visualization of backtracking algo
+        self._correct = False  
+        self._incorrect = False
 
     # GETTERS
 
@@ -65,6 +68,14 @@ class Cell:
     def selected(self) -> bool:
         return self._selected
 
+    @property
+    def correct(self) -> bool:
+        return self._correct
+    
+    @property
+    def incorrect(self) -> bool:
+        return self._incorrect
+
     # SETTERS
 
     @num.setter
@@ -79,6 +90,14 @@ class Cell:
     def selected(self, val: int) -> None:
         self._selected = val
 
+    @correct.setter
+    def correct(self, val: bool) -> None:
+        self._correct = val
+
+    @incorrect.setter
+    def incorrect(self, val: bool) -> None:
+        self._incorrect = val
+
 
     def draw(self, window: pygame.display) -> None:
         """
@@ -92,6 +111,12 @@ class Cell:
         padding = self.__bWidth / 9  # The cell padding will be board width div by 9
         x = self.__col * padding 
         y = self.__row * padding
+
+        # Highlight the cells if we are visualizing backtracking
+        if self._correct:
+            pygame.draw.rect(window, Colors.GREEN, (x+1, y+1, padding-1, padding-1))
+        elif self._incorrect:
+            pygame.draw.rect(window, Colors.RED, (x+1, y+1, padding-1, padding-1))
 
         # If it is a temporary number, show it in grey and left aligned
         if self.tempNum != 0 and self.num == 0:
