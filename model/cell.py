@@ -110,7 +110,7 @@ class Cell:
 
         padding = self.__bWidth / 9  # The cell padding will be board width div by 9
         x = self.__col * padding 
-        y = self.__row * padding
+        y = self.__row * padding + Constants.Y_OFFSET
 
         # Highlight the cells if we are visualizing backtracking
         if self._correct:

@@ -5,6 +5,8 @@ from typing import List, Tuple
 from copy import deepcopy
 import pygame
 
+from model.constants import Constants
+
 class Board:
     """
     Class modelling the Sudoku Board
@@ -174,8 +176,8 @@ class Board:
                 thickness = 1
 
             # Draw a horizontal line and a vertical line at the corresponding position
-            pygame.draw.line(window, Colors.BLACK, (0, i*gap), (self.width, i*gap), thickness)
-            pygame.draw.line(window, Colors.BLACK, (i*gap, 0), (i*gap, self.height), thickness)
+            pygame.draw.line(window, Colors.BLACK, (0, i*gap + Constants.Y_OFFSET), (self.width, i*gap + Constants.Y_OFFSET), thickness)
+            pygame.draw.line(window, Colors.BLACK, (i*gap, Constants.Y_OFFSET), (i*gap, self.height+Constants.Y_OFFSET), thickness)
 
         # Draw each cell, for each cell in the board
         for i in range(self.rows):
@@ -216,10 +218,10 @@ class Board:
             Returns:
                     (tuple[int]): The x and y position of the start of the cell that was clicked
         """
-        if pos[0] < self.width and pos[1] < self.height:
+        if pos[0] < self.width and pos[1] < self.height and pos[1] > Constants.Y_OFFSET:
             gap = self.width / 9
             x = pos[0] // gap
-            y = pos[1] // gap
+            y = (pos[1] - Constants.Y_OFFSET) // gap
             return (int(y), int(x))
 
         else:

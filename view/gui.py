@@ -1,6 +1,7 @@
 # GUI that displays the sudoku board
 
 from model.board import Board
+from model.button import Button
 from model.colors import Colors
 from controller.solver import *
 import pygame
@@ -26,7 +27,7 @@ class GUI:
 
     RUN = True
 
-    def auto_solve(self, window: pygame.display, board: Board, time: time.time, strikes: int) -> None:
+    def auto_solve(self, window: pygame.display, board: Board, time: time.time, strikes: int, buttons: Tuple[Button]) -> None:
         """
         Visualizer function that animates the backtracking algorithm
 
@@ -60,20 +61,20 @@ class GUI:
                 board.cells[row][col].incorrect = False
                 board.cells[row][col].correct = True
                 pygame.time.delay(50)
-                self.redraw_window(window, board, time, strikes)
+                self.redraw_window(window, board, time, strikes, buttons)
 
-                if self.auto_solve(window, board, time, strikes):
+                if self.auto_solve(window, board, time, strikes, buttons):
                     return True
 
                 board.cells[row][col].incorrect = True
                 board.cells[row][col].correct = False
-                self.redraw_window(window, board, time, strikes)
+                self.redraw_window(window, board, time, strikes, buttons)
                 pygame.time.delay(50)
                 board.cells[row][col].num = 0
                 board.model[row][col] = 0
 
 
-    def redraw_window(self, window: pygame.display, board: Board, time: time.time, strikes: int) -> None:
+    def redraw_window(self, window: pygame.display, board: Board, time: time.time, strikes: int, buttons: Tuple[Button]) -> None:
         """
         Function that redraws the window with all the updated information after interaction
 
@@ -87,12 +88,15 @@ class GUI:
         # Draw time
         fnt = pygame.font.SysFont(Constants.FONT, Constants.FONT_SIZE)
         text = fnt.render("Time: " + self.format_time(time), 1, Colors.BLACK)
-        window.blit(text, (Constants.WIN_WIDTH-230, Constants.WIN_HEIGHT - 40))
+        window.blit(text, (Constants.WIN_WIDTH-270, Constants.WIN_HEIGHT - 40))
         # Draw strikes
         text = fnt.render("X " * strikes, 1, Colors.RED)
         window.blit(text, (20, Constants.WIN_HEIGHT - 40))
         # Draw grid and board
         board.draw(window)
+        # Draw buttons
+        for button in buttons:
+            button.draw(window)
         pygame.display.update()
 
     def format_time(self, secs: int) -> str:
@@ -121,6 +125,10 @@ class GUI:
         key = None  # The key pressed
         start = time.time()  # The starting time upon opening the app
         strikes = 0  # The number of strikes the user has
+
+        # Instantiate both buttons
+        generateSudokuBtn = Button("GENERATE SUDOKU\nBOARD", (20, 50), (230, 75), Constants.FONT, Colors.BOARD_BUTTON_BG, Colors.BOARD_BUTTON_HOVER)
+        autoSolveSudokuBtn = Button("AUTO SOLVE\nBOARD", (Constants.WIN_WIDTH - 250, 50), (230, 75), Constants.FONT, Colors.SOLVE_BUTTON_BG, Colors.SOLVE_BUTTON_HOVER)
 
         while GUI.RUN:
 
@@ -155,7 +163,7 @@ class GUI:
                         key = None
                     # Running visualization logic
                     if event.key == pygame.K_SPACE:
-                        self.auto_solve(window, board, play_time, strikes)
+                        self.auto_solve(window, board, play_time, strikes, [generateSudokuBtn, autoSolveSudokuBtn])
                     # Committing number to cell logic
                     if event.key == pygame.K_RETURN:
                         i, j = board.selected
@@ -175,10 +183,22 @@ class GUI:
                 # Mouse Click Event Logic
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     pos = pygame.mouse.get_pos()
+
+                    # Check if the buttons were clicked
+                    for button in [generateSudokuBtn, autoSolveSudokuBtn]:
+                        if button.click():  # If the buttons have been clicked
+
+                            if button == generateSudokuBtn:
+                                # TODO: Implement generate_board() Function
+                                pass
+                            elif button == autoSolveSudokuBtn:
+                                self.auto_solve(window, board, play_time, strikes, [generateSudokuBtn, autoSolveSudokuBtn])
+
                     clicked = board.click(pos)
                     if clicked:
                         board.select(clicked[0], clicked[1])
                         key = None
+
 
             # If the cell is selected and key has been pressed, add a note
             if board.selected and key != None:
@@ -190,7 +210,7 @@ class GUI:
                 GUI.RUN = False
 
             # Redraw the window in each frame and update the pygame display
-            self.redraw_window(window, board, play_time, strikes)
+            self.redraw_window(window, board, play_time, strikes, (generateSudokuBtn, autoSolveSudokuBtn))
             pygame.display.update()
                     
                     
