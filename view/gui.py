@@ -2,6 +2,7 @@
 
 from model.board import Board
 from model.colors import Colors
+from controller.solver import *
 import pygame
 import time
 
@@ -13,6 +14,8 @@ class GUI:
 
     Methods
     -------
+    auto_solve(window, board, time, strikes):
+        visualizer function that animates the backtracking algorithm
     redraw_window(window, board, time, strikes):
         function that updates the display in each frame
     format_time(secs):
@@ -20,6 +23,54 @@ class GUI:
     main():
         main function that initialises pygame and handles events
     """
+
+    RUN = True
+
+    def auto_solve(self, window: pygame.display, board: Board, time: time.time, strikes: int) -> None:
+        """
+        Visualizer function that animates the backtracking algorithm
+
+            Parameters:
+                    window (pygame.display): the pygame window
+                    board (Board): the board object
+                    time (time.time): the play time
+                    strike (int): number of strikes the user has
+            
+            Returns:
+                    (bool): flag indicating whether or not a particular moves yields a potential solution
+        """
+
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                GUI.RUN = False
+                return True  # Exit this loop (solution is to end program)
+        
+        empty_cell = find_empty(board.model)
+        if not empty_cell:
+            return True  # Stop backtracking, sudoku board solved
+        else:
+            row, col = empty_cell
+
+        for i in range(1, 10):
+            if check_valid(board.model, i, (row, col)):
+                board.cells[row][col].num = i
+                board.model[row][col] = i
+                board.cells[row][col].incorrect = False
+                board.cells[row][col].correct = True
+                pygame.time.delay(50)
+                self.redraw_window(window, board, time, strikes)
+
+                if self.auto_solve(window, board, time, strikes):
+                    return True
+
+                board.cells[row][col].incorrect = True
+                board.cells[row][col].correct = False
+                self.redraw_window(window, board, time, strikes)
+                pygame.time.delay(50)
+                board.cells[row][col].num = 0
+                board.model[row][col] = 0
+
 
     def redraw_window(self, window: pygame.display, board: Board, time: time.time, strikes: int) -> None:
         """
@@ -41,6 +92,7 @@ class GUI:
         window.blit(text, (20, Constants.WIN_HEIGHT - 40))
         # Draw grid and board
         board.draw(window)
+        pygame.display.update()
 
     def format_time(self, secs: int) -> str:
         """
@@ -66,18 +118,17 @@ class GUI:
         pygame.display.set_caption(Constants.APP_TITLE)  # Set the window title
         board = Board(9, 9, 540, 540)
         key = None  # The key pressed
-        run = True  # Whether or not the app has started
         start = time.time()  # The starting time upon opening the app
         strikes = 0  # The number of strikes the user has
 
-        while run:
+        while GUI.RUN:
 
             play_time = round(time.time() - start)  # The time elapsed since the game started, recalculated every frame
 
             # Keyboard event handling
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    run = False
+                    GUI.RUN = False
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_1:
                         key = 1
@@ -101,6 +152,9 @@ class GUI:
                     if event.key == pygame.K_DELETE or event.key == pygame.K_BACKSPACE:
                         board.clear()
                         key = None
+                    # Running visualization logic
+                    if event.key == pygame.K_SPACE:
+                        self.auto_solve(window, board, play_time, strikes)
                     # Committing number to cell logic
                     if event.key == pygame.K_RETURN:
                         i, j = board.selected
@@ -115,7 +169,7 @@ class GUI:
                             # Logic to handle end of the game
                             if board.is_finished():
                                 print("Game Over")
-                                run = False
+                                GUI.RUN = False
                 
                 # Mouse Click Event Logic
                 if event.type == pygame.MOUSEBUTTONDOWN:
@@ -125,14 +179,14 @@ class GUI:
                         board.select(clicked[0], clicked[1])
                         key = None
 
-            # If the cell is selected and no key has been pressed, add a note
+            # If the cell is selected and key has been pressed, add a note
             if board.selected and key != None:
                 board.add_note(key)
 
             # If the user has made 3 mistakes, end the game
             if strikes == 3:
                 print("Game Over")
-                run = False
+                GUI.RUN = False
 
             # Redraw the window in each frame and update the pygame display
             self.redraw_window(window, board, play_time, strikes)
