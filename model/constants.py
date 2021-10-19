@@ -26,7 +26,8 @@ class Constants:
     APP_TITLE = "SudoPy"
     FONT = "ubuntumono"
 
-    WIN_DIMENS = (540, 600)
+    WIN_DIMENS = (540, 800)
     WIN_WIDTH = WIN_DIMENS[0]
     WIN_HEIGHT = WIN_DIMENS[1]
     FONT_SIZE = 30
+    Y_OFFSET = 170  # The y position at which the board is drawn
