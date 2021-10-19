@@ -4,6 +4,7 @@ from model.board import Board
 from model.button import Button
 from model.colors import Colors
 from controller.solver import *
+from controller.generate import generate_board
 import pygame
 import time
 
@@ -45,8 +46,6 @@ class GUI:
             if event.type == pygame.QUIT:
                 GUI.RUN = False
                 return True  # Exit this loop (solution is to end program)
-            else:
-                break
         
         empty_cell = find_empty(board.model)
         if not empty_cell:
@@ -189,8 +188,12 @@ class GUI:
                         if button.click():  # If the buttons have been clicked
 
                             if button == generateSudokuBtn:
-                                # TODO: Implement generate_board() Function
-                                pass
+                                new_board = generate_board()  # Create a new board
+                                board.model = new_board  # Update the model being used by the board
+                                board.update_board()
+                                self.redraw_window(window, board, play_time, strikes, (generateSudokuBtn, autoSolveSudokuBtn))
+                                pygame.display.update()              
+                                
                             elif button == autoSolveSudokuBtn:
                                 self.auto_solve(window, board, play_time, strikes, [generateSudokuBtn, autoSolveSudokuBtn])
 
@@ -211,6 +214,5 @@ class GUI:
 
             # Redraw the window in each frame and update the pygame display
             self.redraw_window(window, board, play_time, strikes, (generateSudokuBtn, autoSolveSudokuBtn))
-            pygame.display.update()
-                    
+            pygame.display.update()               
                     
