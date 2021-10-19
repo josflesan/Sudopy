@@ -2,6 +2,7 @@ from controller.solver import check_valid, solve_backtrack
 from model.cell import Cell
 from model.colors import Colors
 from typing import List, Tuple
+from copy import deepcopy
 import pygame
 
 class Board:
@@ -130,8 +131,12 @@ class Board:
             self.cells[row][col].num = val
             self.update_board()
 
+            old_model = deepcopy(self.model)  # Save current state of the model
+
             # If the move is valid (check using the backtracking algorithm), move is ok
             if check_valid(self.model, val, (row, col)) and solve_backtrack(self.model):
+                # Clear the model, then return (so visualization still works)
+                self.model = old_model
                 return True
             # If the move is not valid, bring cell back to default and update the model again
             else:

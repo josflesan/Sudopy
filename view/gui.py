@@ -40,11 +40,12 @@ class GUI:
                     (bool): flag indicating whether or not a particular moves yields a potential solution
         """
 
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 GUI.RUN = False
                 return True  # Exit this loop (solution is to end program)
+            else:
+                break
         
         empty_cell = find_empty(board.model)
         if not empty_cell:
